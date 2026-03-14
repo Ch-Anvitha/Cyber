@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRAWL — KNOW BEFORE THEY DO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #030712;
+    --dark: #0a0f1e;
+    --dark2: #0d1527;
+    --dark3: #111827;
+    --card: #0f172a;
+    --border: #1e2d4a;
+    --border2: #1d2d44;
+    --blue: #0ea5e9;
+    --blue2: #38bdf8;
+    --blue3: #7dd3fc;
+    --blue-dim: rgba(14,165,233,0.12);
+    --blue-glow: rgba(14,165,233,0.25);
+    --grey: #94a3b8;
+    --grey2: #64748b;
+    --white: #f8fafc;
+    --red: #ef4444;
+    --orange: #f97316;
+    --yellow: #f59e0b;
+    --green: #22c55e;
+    --green2: #00d4aa;
+    --font: 'Space Grotesk', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(14,165,233,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(14,165,233,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Radial glow */
+  .bg-glow {
+    position: fixed;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(14,165,233,0.08) 0%, transparent 70%);
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 40px;
+    background: rgba(3,7,18,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 700; font-size: 18px; letter-spacing: -0.3px;
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid rgba(148,163,184,0.18);
+  }
+  .logo-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+  .brand-name { font-weight: 700; font-size: 18px; letter-spacing: -0.3px; }
+  .brand-tagline {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--grey2);
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+  .logo span { color: var(--blue); }
+
+  .nav-badge {
+    font-family: var(--mono);
+    font-size: 11px; color: var(--green2);
+    background: rgba(0,212,170,0.1);
+    border: 1px solid rgba(0,212,170,0.25);
+    padding: 4px 10px; border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* MAIN CONTAINER */
+  main {
+    position: relative; z-index: 1;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 60px 24px 100px;
+  }
+
+  /* HERO */
+  .hero { text-align: center; margin-bottom: 56px; }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono); font-size: 11px;
+    color: var(--blue); background: var(--blue-dim);
+    border: 1px solid rgba(14,165,233,0.2);
+    padding: 5px 14px; border-radius: 20px;
+    margin-bottom: 24px; letter-spacing: 1px;
+    animation: fadeDown 0.6s ease both;
+  }
+  .hero-tag::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--blue);
+    box-shadow: 0 0 8px var(--blue);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes slideIn { from{opacity:0;transform:translateX(-20px)} to{opacity:1;transform:translateX(0)} }
+  @keyframes countUp { from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1} }
+  @keyframes scanLine {
+    0%{top:0;opacity:1} 100%{top:100%;opacity:0}
+  }
+  @keyframes spin { to{transform:rotate(360deg)} }
+
+  h1 {
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 700; line-height: 1.1;
+    letter-spacing: -2px;
+    margin-bottom: 16px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  h1 .accent { color: var(--blue); }
+  h1 .dim { color: var(--grey2); }
+
+  .hero-sub {
+    font-size: 17px; color: var(--grey);
+    line-height: 1.6; max-width: 560px; margin: 0 auto 40px;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display: flex; justify-content: center; gap: 32px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-size: 28px; font-weight: 700;
+    color: var(--blue); font-family: var(--mono);
+    display: block; line-height: 1;
+  }
+  .stat-label { font-size: 11px; color: var(--grey2); letter-spacing: 0.5px; margin-top: 4px; }
+
+  /* SCAN BOX */
+  .scan-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 40px;
+    animation: fadeUp 0.7s 0.4s ease both;
+    position: relative;
+    overflow: hidden;
+  }
+  .scan-box::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+  }
+
+  .scan-label {
+    font-size: 12px; color: var(--grey2); letter-spacing: 1px;
+    text-transform: uppercase; font-family: var(--mono);
+    margin-bottom: 12px;
+  }
+
+  .input-row {
+    display: flex; gap: 12px; align-items: stretch;
+  }
+
+  .url-input {
+    flex: 1;
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 15px;
+    font-family: var(--mono);
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .url-input::placeholder { color: var(--grey2); }
+  .url-input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px var(--blue-glow);
+  }
+
+  .scan-btn {
+    background: linear-gradient(135deg, var(--blue), #0369a1);
+    color: white; border: none;
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-size: 14px; font-weight: 600;
+    font-family: var(--font);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+    letter-spacing: 0.3px;
+  }
+  .scan-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(14,165,233,0.35); }
+  .scan-btn:active { transform: translateY(0); }
+  .scan-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .scan-hint {
+    margin-top: 12px;
+    font-size: 12px; color: var(--grey2);
+    display: flex; gap: 20px;
+  }
+  .scan-hint span { display: flex; align-items: center; gap: 5px; }
+
+  /* PROGRESS */
+  #progress-section {
+    display: none;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  #progress-section::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+  }
+
+  .progress-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 28px;
+  }
+  .scanning-spinner {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  .progress-title { font-weight: 600; font-size: 16px; }
+  .progress-url { font-family: var(--mono); font-size: 12px; color: var(--blue); }
+
+  .check-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .check-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: var(--dark2);
+    font-size: 13px;
+    transition: all 0.3s;
+    opacity: 0.4;
+  }
+  .check-item.active { opacity: 1; border-left: 2px solid var(--blue); }
+  .check-item.done { opacity: 0.7; }
+  .check-item .check-icon { width: 20px; text-align: center; font-size: 14px; }
+  .check-item .check-name { flex: 1; }
+  .check-item .check-status { font-family: var(--mono); font-size: 11px; color: var(--grey2); }
+  .check-item.done .check-status { color: var(--green); }
+  .check-item.active .check-status { color: var(--blue); }
+
+  .progress-bar-wrap {
+    margin-top: 20px;
+    background: var(--dark2);
+    border-radius: 4px; height: 4px; overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%; width: 0;
+    background: linear-gradient(90deg, var(--blue), var(--blue2));
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 8px var(--blue);
+  }
+
+  /* RESULTS */
+  #results-section { display: none; animation: fadeIn 0.5s ease; }
+
+  /* SCORE CARD */
+  .score-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .score-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+  }
+
+  .score-circle-wrap {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 8px;
+  }
+
+  .score-circle {
+    position: relative; width: 130px; height: 130px;
+  }
+  .score-circle svg { transform: rotate(-90deg); }
+  .score-track { fill: none; stroke: var(--border); stroke-width: 8; }
+  .score-fill {
+    fill: none; stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .score-text {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .score-num {
+    font-size: 36px; font-weight: 700;
+    font-family: var(--mono); line-height: 1;
+    animation: countUp 0.6s 0.5s ease both;
+  }
+  .score-of { font-size: 11px; color: var(--grey2); font-family: var(--mono); }
+
+  .risk-badge {
+    font-family: var(--mono); font-size: 12px; font-weight: 600;
+    padding: 5px 14px; border-radius: 20px;
+    letter-spacing: 1px;
+  }
+
+  .score-right { display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+
+  .score-host {
+    font-size: 20px; font-weight: 600;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .host-icon { color: var(--blue); }
+
+  .ai-summary {
+    font-size: 14px; color: var(--grey);
+    line-height: 1.7;
+    padding: 16px;
+    background: var(--dark2);
+    border-left: 3px solid var(--blue);
+    border-radius: 0 8px 8px 0;
+  }
+  .ai-summary::before {
+    content: '🤖 AI Analysis · ';
+    color: var(--blue); font-weight: 600; font-size: 11px;
+    font-family: var(--mono); letter-spacing: 0.5px;
+  }
+
+  .score-stats { display: flex; gap: 20px; }
+  .score-stat { text-align: center; }
+  .score-stat-num {
+    font-size: 22px; font-weight: 700; font-family: var(--mono); display: block;
+  }
+  .score-stat-label { font-size: 10px; color: var(--grey2); letter-spacing: 0.5px; }
+
+  /* ACTIONS */
+  .actions-row {
+    display: flex; gap: 12px;
+    margin-bottom: 24px;
+  }
+  .btn-outline {
+    padding: 10px 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--white);
+    border-radius: 8px;
+    font-size: 13px; font-family: var(--font); font-weight: 500;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 7px;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-dim); }
+
+  .btn-primary-sm {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--blue), #0369a1);
+    color: white; border: none;
+    border-radius: 8px;
+    font-size: 13px; font-family: var(--font); font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 7px;
+    transition: all 0.2s;
+  }
+  .btn-primary-sm:hover { box-shadow: 0 4px 16px rgba(14,165,233,0.3); }
+
+  /* FINDINGS */
+  .findings-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .findings-title { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .findings-title::before { content: '//'; color: var(--blue); font-family: var(--mono); }
+
+  .filter-row { display: flex; gap: 8px; }
+  .filter-btn {
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 11px; font-family: var(--mono);
+    cursor: pointer; border: 1px solid var(--border);
+    background: transparent; color: var(--grey2);
+    transition: all 0.15s;
+  }
+  .filter-btn.active, .filter-btn:hover { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+
+  .findings-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .finding-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    animation: slideIn 0.4s ease both;
+    transition: border-color 0.2s;
+    cursor: pointer;
+  }
+  .finding-card:hover { border-color: var(--border2); }
+  .finding-card.expanded .finding-fix { display: block; }
+  .finding-card.sev-critical { border-left: 3px solid var(--red); }
+  .finding-card.sev-high { border-left: 3px solid var(--orange); }
+  .finding-card.sev-medium { border-left: 3px solid var(--yellow); }
+  .finding-card.sev-low { border-left: 3px solid var(--blue); }
+  .finding-card.sev-none { border-left: 3px solid var(--green); }
+  .finding-card.sev-info { border-left: 3px solid var(--grey2); }
+
+  .finding-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+  }
+
+  .sev-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+
+  .finding-status {
+    font-family: var(--mono); font-size: 10px; font-weight: 600;
+    padding: 3px 8px; border-radius: 4px;
+    letter-spacing: 0.5px; flex-shrink: 0;
+  }
+  .status-pass { background: rgba(34,197,94,0.12); color: var(--green); }
+  .status-fail { background: rgba(239,68,68,0.12); color: var(--red); }
+  .status-warning { background: rgba(245,158,11,0.12); color: var(--yellow); }
+  .status-info { background: rgba(148,163,184,0.1); color: var(--grey); }
+  .status-error { background: rgba(249,115,22,0.12); color: var(--orange); }
+
+  .finding-name { flex: 1; font-size: 14px; font-weight: 500; }
+  .finding-sev-badge {
+    font-family: var(--mono); font-size: 10px;
+    padding: 3px 8px; border-radius: 4px;
+    background: var(--dark2);
+    color: var(--grey2);
+  }
+  .finding-expand { color: var(--grey2); font-size: 12px; transition: transform 0.2s; }
+  .finding-card.expanded .finding-expand { transform: rotate(180deg); }
+
+  .finding-details {
+    padding: 0 18px 14px;
+    font-size: 13px; color: var(--grey);
+    line-height: 1.6;
+    font-family: var(--mono);
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+
+  .finding-fix {
+    display: none;
+    padding: 12px 18px;
+    background: rgba(14,165,233,0.05);
+    border-top: 1px solid var(--border);
+    font-size: 13px; color: var(--grey);
+    line-height: 1.6;
+  }
+  .finding-fix-label {
+    font-family: var(--mono); font-size: 10px; color: var(--blue);
+    font-weight: 600; letter-spacing: 0.5px; margin-bottom: 6px;
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center; padding: 60px 24px;
+    color: var(--grey2); display: none;
+  }
+
+  /* ERROR */
+  .error-banner {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.25);
+    border-radius: 12px; padding: 16px 20px;
+    color: var(--red); margin-bottom: 24px;
+    display: flex; align-items: center; gap: 10px;
+    display: none;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 32px; right: 32px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 20px;
+    font-size: 13px; display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    z-index: 1000; transform: translateY(20px); opacity: 0;
+    transition: all 0.3s;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* FOOTER */
+  footer {
+    position: relative; z-index: 1;
+    text-align: center; padding: 40px;
+    border-top: 1px solid var(--border);
+    color: var(--grey2); font-size: 12px;
+  }
+  .tech-stack {
+    display: flex; justify-content: center; gap: 8px;
+    flex-wrap: wrap; margin-top: 12px;
+  }
+  .tech-tag {
+    padding: 3px 10px; border-radius: 4px;
+    background: var(--dark2); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 10px; color: var(--grey2);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    nav { padding: 12px 20px; }
+    main { padding: 40px 16px 80px; }
+    .score-card { grid-template-columns: 1fr; }
+    .score-circle-wrap { flex-direction: row; gap: 20px; }
+    .input-row { flex-direction: column; }
+    .stats-row { gap: 20px; }
+    h1 { font-size: 32px; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<nav>
+  <div class="logo">
+    <div class="logo-icon">
+      <img src="/static/prawl-logo.png" alt="PRAWL logo" />
+    </div>
+    <div class="brand-text">
+      <div class="brand-name">PRAWL</div>
+      <div class="brand-tagline">KNOW BEFORE THEY DO</div>
+    </div>
+  </div>
+  <div class="nav-badge">● LIVE SCANNER</div>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-tag">KNOW BEFORE THEY DO</div>
+    <h1>Security Audit<br><span class="accent">in 30 Seconds.</span><br><span class="dim">For Free.</span></h1>
+    <p class="hero-sub">
+      PRAWL scans any website for vulnerabilities, data breaches, and misconfigurations — then explains every issue in plain English.
+    </p>
+
+    <div class="stats-row">
+      <div class="stat-item">
+        <span class="stat-num">60M</span>
+        <div class="stat-label">BUSINESSES UNPROTECTED</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">30s</span>
+        <div class="stat-label">SCAN TIME</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">₹0</span>
+        <div class="stat-label">COST TO YOU</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">8+</span>
+        <div class="stat-label">SECURITY CHECKS</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCAN BOX -->
+  <div class="scan-box">
+    <div class="scan-label">// ENTER TARGET URL</div>
+    <div class="input-row">
+      <input
+        type="text"
+        class="url-input"
+        id="urlInput"
+        placeholder="yourbusiness.com or https://example.com"
+        autocomplete="off" spellcheck="false"
+      />
+      <button class="scan-btn" id="scanBtn" onclick="startScan()">
+        <span id="btnIcon">⚡</span>
+        <span id="btnText">Run Scan</span>
+      </button>
+    </div>
+    <div class="scan-hint">
+      <span>🔒 SSL Check</span>
+      <span>🛡️ Security Headers</span>
+      <span>🔍 Port Scan</span>
+      <span>💾 Breach DB</span>
+      <span>🌑 Dark Web</span>
+    </div>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-banner" id="errorBanner">
+    <span>⚠️</span>
+    <span id="errorText">Error scanning URL</span>
+  </div>
+
+  <!-- PROGRESS -->
+  <div id="progress-section">
+    <div class="progress-header">
+      <div class="scanning-spinner"></div>
+      <div>
+        <div class="progress-title">Scanning in progress...</div>
+        <div class="progress-url" id="progressUrl"></div>
+      </div>
+    </div>
+    <ul class="check-list" id="checkList">
+      <li class="check-item" data-step="0"><span class="check-icon">🔒</span><span class="check-name">SSL Certificate Validation</span><span class="check-status">waiting...</span></li>
+      <li class="check-item" data-step="1"><span class="check-icon">🛡️</span><span class="check-name">Security Headers Analysis</span><span class="check-status">waiting...</span></li>
+      <li class="check-item" data-step="2"><span class="check-icon">🔍</span><span class="check-name">Open Port Detection</span><span class="check-status">waiting...</span></li>
+      <li class="check-item" data-step="3"><span class="check-icon">💾</span><span class="check-name">Data Breach Database Check</span><span class="check-status">waiting...</span></li>
+      <li class="check-item" data-step="4"><span class="check-icon">🔖</span><span class="check-name">Software Version Disclosure</span><span class="check-status">waiting...</span></li>
+      <li class="check-item" data-step="5"><span class="check-icon">🤖</span><span class="check-name">AI Analysis & Report Generation</span><span class="check-status">waiting...</span></li>
+    </ul>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-section">
+    <!-- SCORE CARD -->
+    <div class="score-card" id="scoreCard">
+      <div class="score-circle-wrap">
+        <div class="score-circle">
+          <svg viewBox="0 0 130 130" width="130" height="130">
+            <circle class="score-track" cx="65" cy="65" r="56"/>
+            <circle class="score-fill" id="scoreFill" cx="65" cy="65" r="56"
+              stroke-dasharray="351.86" stroke-dashoffset="351.86"/>
+          </svg>
+          <div class="score-text">
+            <span class="score-num" id="scoreNum">--</span>
+            <span class="score-of">/100</span>
+          </div>
+        </div>
+        <div class="risk-badge" id="riskBadge">--</div>
+      </div>
+      <div class="score-right">
+        <div class="score-host">
+          <span class="host-icon">🌐</span>
+          <span id="scoreHost">--</span>
+        </div>
+        <div class="ai-summary" id="aiSummary">Generating AI analysis...</div>
+        <div class="score-stats">
+          <div class="score-stat">
+            <span class="score-stat-num" id="statCritical" style="color:var(--red)">0</span>
+            <div class="score-stat-label">CRITICAL</div>
+          </div>
+          <div class="score-stat">
+            <span class="score-stat-num" id="statWarnings" style="color:var(--yellow)">0</span>
+            <div class="score-stat-label">WARNINGS</div>
+          </div>
+          <div class="score-stat">
+            <span class="score-stat-num" id="statPassed" style="color:var(--green)">0</span>
+            <div class="score-stat-label">PASSED</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions-row">
+      <button class="btn-primary-sm" id="pdfBtn" onclick="downloadReport()">
+        📄 Download PDF Report
+      </button>
+      <button class="btn-outline" onclick="resetScan()">
+        🔄 Scan Another URL
+      </button>
+      <button class="btn-outline" id="shareBtn" onclick="copyShare()">
+        📋 Copy Summary
+      </button>
+    </div>
+
+    <!-- FINDINGS -->
+    <div class="findings-header">
+      <div class="findings-title">Security Findings</div>
+      <div class="filter-row">
+        <button class="filter-btn active" onclick="filterFindings('all', this)">All</button>
+        <button class="filter-btn" onclick="filterFindings('fail', this)">Issues</button>
+        <button class="filter-btn" onclick="filterFindings('pass', this)">Passed</button>
+      </div>
+    </div>
+
+    <div class="findings-list" id="findingsList"></div>
+  </div>
+</main>
+
+<footer>
+  <div>PRAWL — KNOW BEFORE THEY DO</div>
+  <div class="tech-stack">
+    <span class="tech-tag">Python</span>
+    <span class="tech-tag">Flask</span>
+    <span class="tech-tag">Claude AI</span>
+    <span class="tech-tag">HaveIBeenPwned</span>
+    <span class="tech-tag">SSL Lib</span>
+    <span class="tech-tag">ReportLab</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let currentScanData = null;
+let scanProgress = 0;
+
+const SEV_COLORS = {
+  critical: 'var(--red)', high: 'var(--orange)',
+  medium: 'var(--yellow)', low: 'var(--blue)',
+  none: 'var(--green)', info: 'var(--grey2)'
+};
+
+function showToast(msg, icon='✓') {
+  const t = document.getElementById('toast');
+  t.innerHTML = `<span>${icon}</span> ${msg}`;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function setProgress(pct) {
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+function setCheckStatus(step, status, label) {
+  const items = document.querySelectorAll('.check-item');
+  items.forEach((el, i) => {
+    if (i < step) {
+      el.classList.remove('active');
+      el.classList.add('done');
+      el.querySelector('.check-status').textContent = '✓ done';
+      el.querySelector('.check-status').style.color = 'var(--green)';
+    } else if (i === step) {
+      el.classList.add('active');
+      el.querySelector('.check-status').textContent = label || 'running...';
+      el.querySelector('.check-status').style.color = 'var(--blue)';
+    }
+  });
+}
+
+async function startScan() {
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url) {
+    document.getElementById('urlInput').focus();
+    showToast('Please enter a URL to scan', '⚠️');
+    return;
+  }
+
+  // UI reset
+  document.getElementById('errorBanner').style.display = 'none';
+  document.getElementById('results-section').style.display = 'none';
+  document.getElementById('progress-section').style.display = 'block';
+  document.getElementById('scanBtn').disabled = true;
+  document.getElementById('btnIcon').textContent = '⏳';
+  document.getElementById('btnText').textContent = 'Scanning...';
+
+  // Reset check items
+  document.querySelectorAll('.check-item').forEach(el => {
+    el.classList.remove('active', 'done');
+    el.querySelector('.check-status').textContent = 'waiting...';
+    el.querySelector('.check-status').style.color = '';
+  });
+
+  let displayUrl = url.startsWith('http') ? url : 'https://' + url;
+  document.getElementById('progressUrl').textContent = displayUrl;
+
+  // Animate progress
+  const steps = ['Validating SSL certificate...', 'Checking security headers...', 'Scanning open ports...', 'Querying breach databases...', 'Checking version disclosure...', 'Running AI analysis...'];
+  let step = 0;
+  const progressInterval = setInterval(() => {
+    if (step < steps.length) {
+      setCheckStatus(step, 'running', steps[step]);
+      setProgress((step + 1) / (steps.length + 1) * 85);
+      step++;
+    }
+  }, 2000);
+
+  try {
+    const resp = await fetch('/scan', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ url })
+    });
+
+    clearInterval(progressInterval);
+
+    if (!resp.ok) throw new Error(`Server error ${resp.status}`);
+    const data = await resp.json();
+
+    if (data.error) throw new Error(data.error);
+
+    currentScanData = data;
+    setProgress(100);
+
+    // Mark all done
+    document.querySelectorAll('.check-item').forEach(el => {
+      el.classList.remove('active');
+      el.classList.add('done');
+      el.querySelector('.check-status').textContent = '✓ done';
+      el.querySelector('.check-status').style.color = 'var(--green)';
+    });
+
+    setTimeout(() => {
+      document.getElementById('progress-section').style.display = 'none';
+      showResults(data);
+    }, 600);
+
+  } catch (err) {
+    clearInterval(progressInterval);
+    document.getElementById('progress-section').style.display = 'none';
+    const eb = document.getElementById('errorBanner');
+    document.getElementById('errorText').textContent = err.message || 'Failed to scan URL. Check the URL and try again.';
+    eb.style.display = 'flex';
+  } finally {
+    document.getElementById('scanBtn').disabled = false;
+    document.getElementById('btnIcon').textContent = '⚡';
+    document.getElementById('btnText').textContent = 'Run Scan';
+  }
+}
+
+function showResults(data) {
+  document.getElementById('results-section').style.display = 'block';
+
+  // Score circle
+  const score = data.score;
+  const scoreColor = score >= 80 ? '#22c55e' : score >= 60 ? '#f59e0b' : score >= 40 ? '#f97316' : '#ef4444';
+  const circumference = 351.86;
+  const offset = circumference - (score / 100) * circumference;
+  const fill = document.getElementById('scoreFill');
+  fill.style.stroke = scoreColor;
+  setTimeout(() => { fill.style.strokeDashoffset = offset; }, 100);
+
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('scoreNum').style.color = scoreColor;
+
+  const badge = document.getElementById('riskBadge');
+  badge.textContent = data.risk_level;
+  badge.style.background = `${data.risk_color}1a`;
+  badge.style.color = data.risk_color;
+  badge.style.border = `1px solid ${data.risk_color}40`;
+
+  document.getElementById('scoreHost').textContent = data.hostname;
+  document.getElementById('aiSummary').textContent = data.ai_summary;
+  document.getElementById('statCritical').textContent = data.stats.critical;
+  document.getElementById('statWarnings').textContent = data.stats.warnings;
+  document.getElementById('statPassed').textContent = data.stats.passed;
+
+  renderFindings(data.findings);
+
+  document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderFindings(findings, filter='all') {
+  const list = document.getElementById('findingsList');
+  list.innerHTML = '';
+
+  const filtered = filter === 'all' ? findings
+    : filter === 'fail' ? findings.filter(f => f.status === 'fail' || f.status === 'warning')
+    : findings.filter(f => f.status === 'pass');
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--grey2)">No findings in this category.</div>';
+    return;
+  }
+
+  filtered.forEach((f, i) => {
+    const card = document.createElement('div');
+    card.className = `finding-card sev-${f.severity}`;
+    card.style.animationDelay = `${i * 0.05}s`;
+
+    const statusClass = `status-${f.status}`;
+    const statusLabel = {pass:'✓ PASS', fail:'✗ FAIL', warning:'⚠ WARN', info:'ℹ INFO', error:'? ERROR'}[f.status] || f.status.toUpperCase();
+    const sevColor = SEV_COLORS[f.severity] || 'var(--grey2)';
+
+    card.innerHTML = `
+      <div class="finding-header" onclick="toggleFinding(this.parentElement)">
+        <span class="sev-dot" style="background:${sevColor};box-shadow:0 0 6px ${sevColor}40"></span>
+        <span class="finding-status ${statusClass}">${statusLabel}</span>
+        <span class="finding-name">${f.check}</span>
+        <span class="finding-sev-badge">${f.severity.toUpperCase()}</span>
+        <span class="finding-expand">▼</span>
+      </div>
+      <div class="finding-details">${f.details}</div>
+      ${f.fix ? `<div class="finding-fix"><div class="finding-fix-label">// HOW TO FIX</div>${f.fix}</div>` : ''}
+    `;
+    list.appendChild(card);
+  });
+}
+
+function toggleFinding(card) {
+  card.classList.toggle('expanded');
+}
+
+function filterFindings(filter, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (currentScanData) renderFindings(currentScanData.findings, filter);
+}
+
+async function downloadReport() {
+  if (!currentScanData) return;
+  const btn = document.getElementById('pdfBtn');
+  btn.textContent = '⏳ Generating...';
+  btn.disabled = true;
+  try {
+    const resp = await fetch('/generate-report', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(currentScanData)
+    });
+    const data = await resp.json();
+    if (data.url) {
+      const a = document.createElement('a');
+      a.href = data.url; a.download = data.filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      showToast('PDF report downloaded!', '📄');
+    } else {
+      showToast('PDF generation failed. Install reportlab.', '⚠️');
+    }
+  } catch {
+    showToast('Could not generate report', '⚠️');
+  } finally {
+    btn.textContent = '📄 Download PDF Report';
+    btn.disabled = false;
+  }
+}
+
+function copyShare() {
+  if (!currentScanData) return;
+  const d = currentScanData;
+  const text = `PRAWL Security Scan Results
+Website: ${d.url}
+Score: ${d.score}/100 (${d.risk_level} RISK)
+Critical Issues: ${d.stats.critical}
+Warnings: ${d.stats.warnings}
+Passed: ${d.stats.passed}
+---
+${d.ai_summary}
+---
+Scan your website free at PRAWL`;
+  navigator.clipboard.writeText(text).then(() => showToast('Summary copied to clipboard!'));
+}
+
+function resetScan() {
+  document.getElementById('results-section').style.display = 'none';
+  document.getElementById('urlInput').value = '';
+  document.getElementById('urlInput').focus();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  currentScanData = null;
+}
+
+// Enter key
+document.getElementById('urlInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') startScan();
+});
+</script>
+</body>
+</html>
