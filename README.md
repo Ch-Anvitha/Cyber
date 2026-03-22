@@ -1,96 +1,166 @@
-# 🛡️ CyberShield — AI Cybersecurity Copilot
+# 🛡️ PRAWL — Know Before They Do
 
-**Instant security audits for Indian small businesses. Free. 30 seconds.**
+> AI-powered cybersecurity scanner for Indian small businesses. Free. 30 seconds.
 
 ---
 
-## 🚀 Quick Start
+## 🚀 What is PRAWL?
 
-### 1. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
+PRAWL is a web-based security audit tool that scans any website for vulnerabilities, misconfigurations, and data breaches — then explains every issue in plain English (or Hindi, Telugu, Tamil, and more) using AI.
 
-### 2. Set API Key (Optional — for AI summaries)
-```bash
-export ANTHROPIC_API_KEY=your_key_here
-```
+Built for Indian small business owners who don't have a security team.
 
-### 3. Run the App
-```bash
-cd backend
-python app.py
-```
+---
 
-### 4. Open Browser
-Navigate to: **http://localhost:5000**
+## ✨ Features
+
+| Feature | Description |
+|---|---|
+| 🔒 SSL Check | Validates certificate, checks expiry |
+| 🛡️ Security Headers | Checks 6 critical HTTP headers |
+| 🔄 HTTPS Redirect | Ensures HTTP → HTTPS |
+| 🔍 Open Port Scan | Detects exposed database/service ports |
+| 💾 Data Breach History | HaveIBeenPwned API check |
+| 🔖 Software Disclosure | Detects version leaks in headers |
+| 🤖 AI Analysis | Groq/Llama generates plain-English summary |
+| 🌐 Regional Languages | Summary in Hindi, Telugu, Tamil, Kannada, Marathi, Bengali |
+| 📈 Score History | SQLite tracks score over time with chart |
+| 💬 AI Chatbot | Ask questions about your scan results |
+| 📄 PDF Report | Download a professional security report |
 
 ---
 
 ## 🏗️ Project Structure
+
 ```
-cybershield/
+Cyber/
 ├── backend/
 │   ├── app.py              # Flask server & API routes
 │   ├── scanner.py          # All security scan modules
+│   ├── chatbot.py          # AI chatbot (Groq → Anthropic → OpenRouter → Fallback)
 │   ├── report_generator.py # PDF report generation
+│   ├── prawl_history.db    # SQLite scan history (auto-created)
 │   └── reports/            # Generated PDFs saved here
 ├── frontend/
 │   ├── templates/
-│   │   └── index.html      # Main UI (single file)
-│   └── static/             # CSS/JS/images
-└── requirements.txt
+│   │   └── index.html      # Main UI
+│   └── static/             # CSS / JS / images
+├── requirements.txt
+├── run.bat                  # Windows one-click launcher
+└── .env                     # API keys (never commit this)
 ```
 
 ---
 
-## 🔍 What Gets Scanned
+## ⚙️ Setup & Installation
 
-| Check | What It Does |
-|-------|-------------|
-| SSL Certificate | Validates cert, checks expiry |
-| Security Headers | 6 critical HTTP headers |
-| HTTPS Redirect | Ensures HTTP → HTTPS |
-| Open Ports | Detects exposed database/service ports |
-| Data Breach History | HaveIBeenPwned API |
-| Software Disclosure | Checks for version leaks in headers |
-| AI Analysis | Claude generates plain-English summary |
+### 1. Clone the repository
+```bash
+git clone https://github.com/Ch-Anvitha/Cyber.git
+cd Cyber
+```
+
+### 2. Create your `.env` file
+```bash
+copy .env.example .env
+```
+Open `.env` and add your API key:
+```
+GROQ_API_KEY=your_groq_key_here
+```
+Get a free Groq API key at → https://console.groq.com
+
+### 3. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Run the app
+```bash
+cd backend
+python app.py
+```
+Or just double-click `run.bat` on Windows.
+
+### 5. Open browser
+```
+http://localhost:5000
+```
 
 ---
 
-## 🎨 Color Theme
-- **Black**: `#030712` (background)
-- **Dark Blues**: `#0a0f1e`, `#0d1527` (cards)
-- **Electric Blue**: `#0ea5e9` (accent/primary)
-- **Grey**: `#94a3b8` (secondary text)
+## 🔑 Environment Variables
+
+| Variable | Required | Description |
+|---|---|---|
+| `GROQ_API_KEY` | ✅ Recommended | Free AI summaries via Groq/Llama |
+| `ANTHROPIC_API_KEY` | ❌ Optional | Claude AI (paid, higher quality) |
+| `OPENROUTER_API_KEY` | ❌ Optional | OpenRouter fallback (free tier) |
+| `FLASK_DEBUG` | ❌ Optional | Set `true` for development only |
+| `ALLOWED_ORIGINS` | ❌ Optional | CORS origins for production |
 
 ---
 
 ## 📊 Risk Scoring
+
 | Score | Risk Level | Color |
-|-------|-----------|-------|
-| 80-100 | LOW | Green |
-| 60-79 | MEDIUM | Yellow |
-| 40-59 | HIGH | Orange |
-| 0-39 | CRITICAL | Red |
+|---|---|---|
+| 80 – 95 | LOW | 🟢 Green |
+| 60 – 79 | MEDIUM | 🟡 Yellow |
+| 40 – 59 | HIGH | 🟠 Orange |
+| 0 – 39 | CRITICAL | 🔴 Red |
 
 ---
 
-## 🔧 Configuration
+## 🌐 Language Support
 
-Edit `backend/scanner.py` to add:
-- **HaveIBeenPwned API key** (for breach checks)
-- **DeHashed API** (for dark web monitoring)
+PRAWL generates AI summaries in 7 languages:
 
----
-
-## 💡 Demo Tips (Hackathon)
-
-1. Scan a real local Indian business website on stage
-2. Narrate each check as it runs
-3. Click the RED findings to show AI explanations
-4. Download PDF report live — "₹1 lakh report in 30 seconds"
+- English
+- हिंदी (Hindi)
+- తెలుగు (Telugu)
+- தமிழ் (Tamil)
+- ಕನ್ನಡ (Kannada)
+- मराठी (Marathi)
+- বাংলা (Bengali)
 
 ---
 
-*Built for Hackathon 2026 · Python + Flask + Claude AI*
+## 🤖 AI Provider Chain
+
+The chatbot and summary generator try providers in this order:
+
+1. **Groq** (free) — Llama 3.3 70B
+2. **Anthropic** (paid) — Claude Sonnet
+3. **OpenRouter** (free tier) — Mistral 7B
+4. **Rule-based fallback** — always works, no API key needed
+
+---
+
+## 🛠️ Tech Stack
+
+- **Backend** — Python, Flask, Flask-Limiter, Flask-CORS
+- **AI** — Groq (Llama 3.3), Anthropic (Claude), OpenRouter (Mistral)
+- **Database** — SQLite (scan history)
+- **PDF** — ReportLab
+- **Frontend** — Vanilla HTML/CSS/JS, Chart.js
+- **Security checks** — Python `ssl`, `socket`, `requests`
+
+---
+
+## 🔒 Security Notes
+
+- Only scan websites you own or have explicit permission to test
+- Rate limited to 5 scans per minute per IP
+- Reports stored locally in `backend/reports/`
+- Never commit your `.env` file
+
+---
+
+## 📄 License
+
+Built for Hackathon 2026 · Python + Flask + Groq AI
+
+---
+
+*PRAWL — Know Before They Do* 🛡️
